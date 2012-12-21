@@ -1,9 +1,14 @@
 #include "wordnet.h"
 #include "wordnode.h"
 
-
 WordNet::WordNet()
 {
+	m_root = new WordNode;
+}
+
+WordNet::~WordNet()
+{
+	delete m_root;
 }
 
 void WordNet::addString(const std::wstring &s, const std::wstring &lemma)

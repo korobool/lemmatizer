@@ -4,6 +4,11 @@ WordNode::WordNode()
 {
 }
 
+WordNode::~WordNode()
+{
+	// TODO: remove the whole underlaying structure
+}
+
 void WordNode::addString(const std::wstring &s, const std::wstring *lemma)
 {
 	WordNodeMap::iterator tmpIt;

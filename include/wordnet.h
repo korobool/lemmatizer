@@ -10,6 +10,7 @@ class WordNet
 {
 public:
 	WordNet();
+	~WordNet();
 
 	void addString(const std::wstring &s, const std::wstring &lemma);
 

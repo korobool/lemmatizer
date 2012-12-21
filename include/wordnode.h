@@ -8,6 +8,7 @@ class WordNode
 {
 public:
 	WordNode();
+	~WordNode();
 
 	void addString(const std::wstring &s, const std::wstring *lemma);
 
