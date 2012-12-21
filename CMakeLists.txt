@@ -9,6 +9,10 @@ set(SOURCES
 	src/traindataparser.cpp
 	src/main.cpp)
 set(HEADERS
+	include/utf8/checked.h
+	include/utf8/unchecked.h
+	include/utf8/core.h
+	include/utf8.h
 	include/wordnet.h
 	include/wordnode.h)
 
