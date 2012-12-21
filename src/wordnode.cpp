@@ -14,7 +14,6 @@ void WordNode::addString(const std::wstring &s, const std::wstring *lemma)
 	WordNodeMap::iterator tmpIt;
 	WordNode *curNode = this;
 
-
 	if (!s.length())
 		return;
 
@@ -24,8 +23,9 @@ void WordNode::addString(const std::wstring &s, const std::wstring *lemma)
 		if (tmpIt == curNode->m_map.end()) { // node already exists
 			curNode = tmpIt->second;
 		} else {
-			curNode = new WordNode;
-			curNode->m_map[c] = curNode;
+			WordNode *tmpNode = new WordNode;
+			curNode->m_map[*it] = tmpNode;
+			curNode = tmpNode;
 		}
 #endif
 	}
