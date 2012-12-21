@@ -71,16 +71,16 @@ bool Utf8File::readData()
 			return false;
 		}
 
+		// Convert it to UTF-16
+		Utf16Line utf16line;
+		utf8::utf8to16(line.begin(), end_it, std::back_inserter(utf16line));
+
 		// Skip BOM (Byte Order Mark) bytes
 		if (lineIndex == 1) {
 			bool hasBom = utf8::starts_with_bom(line.begin(), line.end());
 			if (hasBom)
-				line.erase(0, 3);
+				utf16line.erase(0, 1);
 		}
-
-		// Convert it to UTF-16
-		Utf16Line utf16line;
-		utf8::utf8to16(line.begin(), end_it, std::back_inserter(utf16line));
 
 		// Append to data
 		m_data->push_back(utf16line);

@@ -9,7 +9,7 @@
 class Utf8File
 {
 public:
-	typedef std::vector<unsigned short> Utf16Line;
+	typedef std::wstring Utf16Line;
 	typedef std::vector<Utf16Line> Utf16LineList;
 	typedef std::shared_ptr<Utf16LineList> Data; // shared ptr to vector of UTF-16 lines
 
