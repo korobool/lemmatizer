@@ -14,12 +14,14 @@ set(UTF8_LIB_HEADERS
 	include/utf8.h
 )
 set(SOURCES
+	src/utf8file.cpp
 	src/wordnode.cpp
 	src/wordnet.cpp
-	src/traindataparser.cpp
+#	src/traindataparser.cpp
 	src/main.cpp)
 set(HEADERS
 	${UTF8_LIB_HEADERS}
+	include/utf8file.h
 	include/wordnet.h
 	include/wordnode.h
 	include/traindataparser.h)

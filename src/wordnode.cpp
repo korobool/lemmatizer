@@ -1,3 +1,4 @@
+#include <iostream>
 #include "wordnode.h"
 
 WordNode::WordNode()
@@ -17,9 +18,16 @@ void WordNode::addString(const std::wstring &s, const std::wstring *lemma)
 	if (!s.length())
 		return;
 
-	for (auto c : s) {
-		tmpIt = curNode->m_map.find(c);
-#if 0
+	for (std::wstring::const_iterator it = s.cbegin(); it != s.cend(); ++it) {
+		// BUG: remove this check after fixing input data issue
+		if (!*it) {
+			std::cerr << "fack!" << std::endl;
+			return;
+		} else {
+			std::wcout << u"received: " << *it << std::endl;
+		}
+		
+		tmpIt = curNode->m_map.find(*it);
 		if (tmpIt == curNode->m_map.end()) { // node already exists
 			curNode = tmpIt->second;
 		} else {
@@ -27,11 +35,9 @@ void WordNode::addString(const std::wstring &s, const std::wstring *lemma)
 			curNode->m_map[*it] = tmpNode;
 			curNode = tmpNode;
 		}
-#endif
 	}
-#if 0
+
 	// Since we know that this is lemma (LemmaChar) -- cast it to string
 	curNode->m_map[LemmaChar] =
 			reinterpret_cast<WordNode*>(const_cast<std::wstring*>(lemma));
-#endif
 }

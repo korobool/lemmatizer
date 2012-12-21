@@ -2,7 +2,6 @@
 #define TRAINDATAPARSER_H
 
 #include <string>
-#include <fstream>
 
 class WordNet;
 
@@ -19,8 +18,6 @@ public:
 private:
 	bool readWordNet();
 
-	std::basic_ifstream<wchar_t> m_file;
-	mutable std::string m_errorString;
 	WordNet *m_wordNet;
 };
 
