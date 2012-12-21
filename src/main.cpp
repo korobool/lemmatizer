@@ -22,12 +22,12 @@ int main(int argc, char *argv[])
 	std::cout << "File was read" << std::endl;
 
 	Utf8File::Data data = file.data();
-	for (size_t i = 0; i < data->size(); ++i) {
+	for (size_t i = 0; i < 3; ++i) {
 		for (size_t j = 0; j < (*data)[i].size(); ++j) {
-			std::cout << std::hex << "0x" << (*data)[i][j];
-			std::cout << " " << (char)((*data)[i][j]) << std::endl;
+			std::wcout << "0x" << std::hex << (unsigned short)(*data)[i][j];
+			std::wcout << " " << (char)((*data)[i][j]) << std::endl;
 		}
-		break;
+		std::cout << "--------" << std::endl;
 	}
 
 	return EXIT_SUCCESS;
