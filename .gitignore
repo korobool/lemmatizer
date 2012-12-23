@@ -1,5 +1,7 @@
 build/
 .kdev4/
 *.kdev4
-
+__pycache__
+*.pyc
+.idea
 
