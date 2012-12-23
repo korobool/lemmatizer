@@ -3,8 +3,13 @@ package WordsTierTree;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class WordTree {
+
+    private static final Pattern russianWord = Pattern.compile("[А-Яа-яA-Za-z0-9-]+"); //[\p{IsCyrillic}]
 
     private final Map tree = new TreeMap<Character, Object>();
 
@@ -46,9 +51,11 @@ public class WordTree {
         int index = word_lemmas.indexOf(lemma);
         if (index < 0)
             word_lemmas.add(lemma);
-        if (word_lemmas.size() > 1) {
-            System.out.print("Mutilemma word: " + wordForm + "\n");
-        }
+
+        System.out.print("Learning WordForm: " + wordForm + "\n");
+//        if (word_lemmas.size() > 1) {
+//            System.out.print("Mutilemma word: " + wordForm + "\n");
+//        }
 
     }
 
@@ -67,7 +74,10 @@ public class WordTree {
         if (line == null || line.length() < 1)
             return false;
         // Russian symbols сan be verified here
-        return true;
+
+        //Matcher m = russianWord.matcher(line).matches();
+
+        return russianWord.matcher(line).matches();
     }
 
     public ArrayList<String> getLemmas(String word) {
