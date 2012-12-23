@@ -1,18 +1,19 @@
-package WordsTierTree;
+package WordNormalizer;
 
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.regex.Matcher;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class WordTree {
+public class LemmatizerModel {
 
-    private static final Pattern russianWord = Pattern.compile("[А-Яа-яA-Za-z0-9-]+"); //[\p{IsCyrillic}]
+    private double compressionAspect = 1;
+
+    private boolean collectMode;
+
+    private static final Pattern RUSSIAN_WORD = Pattern.compile("[А-Яа-я-]+"); //[\p{IsCyrillic}]
 
     private final Map tree = new TreeMap<Character, Object>();
-
     private ArrayList<String> lemmas = new ArrayList<String>();
 
     public void addWordForm(String wordForm, String lemma) {
@@ -21,6 +22,7 @@ public class WordTree {
             return;
 
         Map<Character, Object> node = tree;
+
         for (int index=0; index < wordForm.length(); index++) {
 
             Map<Character, Object> next_node = (Map)node.get(wordForm.charAt(index));
@@ -32,7 +34,6 @@ public class WordTree {
                 node.put(wordForm.charAt(index) ,map);
                 node = map;
             }
-
         }
 
         int lemmaIndex = getLemmaIndex(lemma);
@@ -75,19 +76,27 @@ public class WordTree {
             return false;
         // Russian symbols сan be verified here
 
-        //Matcher m = russianWord.matcher(line).matches();
+        //Matcher m = RUSSIAN_WORD.matcher(line).matches();
 
-        return russianWord.matcher(line).matches();
+        return RUSSIAN_WORD.matcher(line).matches();
     }
 
     public ArrayList<String> getLemmas(String word) {
 
         Map<Character, Object> node = tree;
 
+        ArrayList<String> word_lemmas = new ArrayList<String>();
+
         for (int index=0; index < word.length(); index++) {
 
             Map<Character, Object> next_node = (Map)node.get(word.charAt(index));
             if (next_node != null) {
+                if (this.collectMode == true) {
+                    ArrayList<String> l = (ArrayList<String>)node.get('#');
+                    if (l != null) {
+                        word_lemmas.addAll((ArrayList<String>)node.get('#'));
+                    }
+                }
                 node = next_node;
             }
             else {
@@ -95,8 +104,26 @@ public class WordTree {
             }
         }
 
-        ArrayList<String> word_lemmas = (ArrayList<String>)node.get('#');
+        ArrayList<String> l = (ArrayList<String>)node.get('#');
+        if (l != null) {
+            word_lemmas.addAll((ArrayList<String>)node.get('#'));
+        };
 
         return word_lemmas;
+    }
+
+    public void setCompressionAspect(double compressionAspect) {
+        if (compressionAspect > 1.0)
+            return;
+
+        this.compressionAspect = compressionAspect;
+
+        if (compressionAspect < 1.0) {
+            this.setCollectMode(true);
+        }
+    }
+
+    public void setCollectMode(boolean collectMode) {
+        this.collectMode = collectMode;
     }
 }

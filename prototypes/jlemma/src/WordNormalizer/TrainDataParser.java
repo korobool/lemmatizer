@@ -1,21 +1,19 @@
-package WordsTierTree;
+package WordNormalizer;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
 public class TrainDataParser {
-    private WordTree words;
+    private LemmatizerModel words;
 
-    public void LoadData(String dataFile, WordTree words) {
+    public void LoadData(String dataFile, LemmatizerModel words) {
         // Open input file with train data
         this.words = words;
         try {
             BufferedReader br = new BufferedReader(new FileReader(dataFile));
             String line;
             while ((line = br.readLine()) != null) {
-                // process the line.
-                // System.out.print("Train entry processing: " + line + "\n");
                 processLine(line);
             }
             br.close();

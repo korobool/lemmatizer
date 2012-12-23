@@ -1,5 +1,5 @@
-import WordsTierTree.TrainDataParser;
-import WordsTierTree.WordTree;
+import WordNormalizer.LemmatizerModel;
+import WordNormalizer.TrainDataParser;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,22 +14,30 @@ public class Main {
             System.out.print("Train data file is not specified.");
             System.exit(0);
         }
-        WordTree words = new WordTree();
+        LemmatizerModel lemmatizer = new LemmatizerModel();
 
-        new TrainDataParser().LoadData(args[0], words);
+        // According to task we have to provide a way how to pack the size of model
+        lemmatizer.setCompressionAspect(1);
+        lemmatizer.setCollectMode(false);
+
+        // Optional stemmer can be used for cases when model couldn't find any lemma
+        // RussianPorterStemmer stemmer = new RussianPorterStemmer();
+
+        new TrainDataParser().LoadData(args[0], lemmatizer);
 
         while (true) {
             System.out.print("input word form >>>");
             String word = getLine();
-            //System.out.print(words.getLemmas(word) + "\n");
 
-            ArrayList<String> lemmas = words.getLemmas(word);
+            ArrayList<String> lemmas = lemmatizer.getLemmas(word);
 
             if (lemmas != null) {
                 System.out.print(lemmas);
-//                for (String lemma : lemmas) {
-//                    System.out.print(lemma + "||");
-//                }
+            }
+            else {
+                System.out.print("Unknown word.");
+                // Optional thing, uncomment it to allow simple stemming
+                // System.out.print("Try to stemm it: " + stemmer.stem(word));
             }
             System.out.print("\n");
         }
