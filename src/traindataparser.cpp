@@ -1,41 +1,49 @@
-#include <iostream>
+#include <iostream> // ###
 #include <algorithm>
 #include "traindataparser.h"
 #include "wordnet.h"
-#include "utf8.h"
+#include "utf8file.h"
 
 TrainDataParser::TrainDataParser()
+	: m_wordNet(std::make_shared<WordNet>())
 {
 }
 
-TrainDataParser::~TrainDataParser()
+bool TrainDataParser::parse(const Utf8File::Data &fileData)
 {
-}
+	const wchar_t Delimeter = u',';
 
-bool TrainDataParser::read(const std::string &filePath)
-{
-	m_wordNet = new WordNet;
+	int lineNo = 0;
+	for (auto line : *fileData) {
+		++lineNo;
+		if (lineNo % 10000 == 0)
+			std::cout << "### Line no: " << lineNo << std::endl; // ###
 
-	m_file.open(filePath, std::ios_base::in | std::ios_base::binary);
+		if (line.empty())
+			continue;
 
-	if (!m_file.good()) {
-		m_errorString = "Open file error: probably file doesn't exist";
-		m_file.close();
-		delete m_wordNet;
-		return false;
+		std::wstring::iterator delimIt = std::find(line.begin(), line.end(), Delimeter);
+		if (delimIt == line.end()) {
+			std::cerr << "Delimeter not found: line #" << lineNo << std::endl;
+			continue;
+		}
+
+		std::wstring word(line.begin(), delimIt);
+		std::wstring lemma(delimIt + 1, line.end());
+
+		bool badLine = std::find(lemma.begin(), lemma.end(), Delimeter) != lemma.end();
+		if (word.empty() || lemma.empty() || badLine) {
+			std::cerr << "Too many delimeters: line #" << lineNo << std::endl;
+			continue;
+		}
+
+		m_wordNet->addString(word, lemma);
 	}
-	
-	if (!(readWordNet())) {
-		m_file.close();
-		delete m_wordNet;
-		return false;
-	}
 
-	m_file.close();
 	return true;
 }
 
-WordNet *TrainDataParser::wordNet() const
+std::shared_ptr<WordNet> TrainDataParser::wordNet()
 {
 	return m_wordNet;
 }
@@ -43,36 +51,4 @@ WordNet *TrainDataParser::wordNet() const
 std::string TrainDataParser::errorString() const
 {
 	return m_errorString;
-}
-
-/* private */
-
-bool TrainDataParser::readWordNet()
-{
-	const wchar_t delimeter = u',';
-
-	while (!m_file.eof() && m_file.good()) {
-		std::wstring line;
-		std::getline(m_file, line);
-		std::wcout << line.length() << std::endl;
-		std::wstring::iterator delimIt = std::find(line.begin(), line.end(), delimeter);
-		if (delimIt == line.end())
-			continue;
-		
-		std::wstring word(line.begin(), delimIt);
-		std::wstring lemma(delimIt + 1, line.end());
-
-		std::wcout << "word: " << word.length() << std::endl;
-		std::wcout << "lemma: " << lemma.length() << std::endl;
-		
-		bool badLine = std::find(lemma.begin(), lemma.end(), delimeter) != lemma.end();
-		if (word.empty() || lemma.empty() || badLine) {
-			std::wcerr << u"Bad line: " << line << std::endl;
-			continue;
-		}
-		
-		m_wordNet->addString(word, lemma);
-	}
-	
-	return true;
 }

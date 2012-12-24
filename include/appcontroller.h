@@ -1,5 +1,5 @@
-#ifndef TRAINDATAPARSER_H
-#define TRAINDATAPARSER_H
+#ifndef APPCONTROLLER_H
+#define APPCONTROLLER_H
 
 #include <string>
 #include <memory>
@@ -7,18 +7,20 @@
 
 class WordNet;
 
-class TrainDataParser
+class AppController
 {
 public:
-	TrainDataParser();
+	AppController();
 
-	bool parse(const Utf8File::Data &fileData);
+	bool run();
 	std::string errorString() const;
-	std::shared_ptr<WordNet> wordNet();
 
 private:
+	bool readFile(const std::string &filePath);
+
+	Utf8File::Data m_fileData;
 	std::shared_ptr<WordNet> m_wordNet;
 	mutable std::string m_errorString;
 };
 
-#endif // TRAINDATAPARSER_H
+#endif // APPCONTROLLER_H
